@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/holo_blue_dark">
+
+    <ImageView
+        android:id="@+id/coupon_imageView_clientCouponRow"
+        android:layout_width="0dp"
+        android:layout_height="110dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/station" />
+
+    <TextView
+        android:id="@+id/couponName_textView_clientCouponRow"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:paddingLeft="16dp"
+        android:text="Lleva 3 paga 4"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/coupon_imageView_clientCouponRow" />
+
+    <TextView
+        android:id="@+id/detailCoupon_textView_couponRow"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:paddingRight="16dp"
+        android:text="Expira en 10 días"
+        android:textAlignment="textEnd"
+        android:textColor="@android:color/white"
+        app:layout_constraintEnd_toEndOf="@+id/couponName_textView_clientCouponRow"
+        app:layout_constraintStart_toStartOf="@+id/couponName_textView_clientCouponRow"
+        app:layout_constraintTop_toBottomOf="@+id/couponName_textView_clientCouponRow" />
+</androidx.constraintlayout.widget.ConstraintLayout>

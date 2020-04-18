@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/holo_blue_dark"
+    tools:context=".activities.register.RegisterFragment">
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/email_editText_register"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/rounded_edittext"
+                android:ems="10"
+                android:hint="@string/email"
+                android:inputType="textEmailAddress"
+                android:paddingLeft="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/name_editText_register"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/rounded_edittext"
+                android:ems="10"
+                android:hint="@string/name"
+                android:inputType="textPersonName"
+                android:paddingLeft="16dp"
+                app:layout_constraintEnd_toEndOf="@+id/email_editText_register"
+                app:layout_constraintStart_toStartOf="@+id/email_editText_register"
+                app:layout_constraintTop_toBottomOf="@+id/email_editText_register" />
+
+            <EditText
+                android:id="@+id/lastName_editText_register"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/rounded_edittext"
+                android:ems="10"
+                android:hint="@string/lastName"
+                android:inputType="textPersonName"
+                android:paddingLeft="16dp"
+                app:layout_constraintEnd_toEndOf="@+id/name_editText_register"
+                app:layout_constraintStart_toStartOf="@+id/name_editText_register"
+                app:layout_constraintTop_toBottomOf="@+id/name_editText_register" />
+
+            <EditText
+                android:id="@+id/cellPhone_editText_register"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/rounded_edittext"
+                android:ems="10"
+                android:hint="@string/cellPhone"
+                android:inputType="phone"
+                android:paddingLeft="16dp"
+                app:layout_constraintEnd_toEndOf="@+id/lastName_editText_register"
+                app:layout_constraintStart_toStartOf="@+id/lastName_editText_register"
+                app:layout_constraintTop_toBottomOf="@+id/lastName_editText_register" />
+
+            <EditText
+                android:id="@+id/password_editText_register"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/rounded_edittext"
+                android:ems="10"
+                android:hint="@string/password"
+                android:inputType="textPassword"
+                android:paddingLeft="16dp"
+                app:layout_constraintEnd_toEndOf="@+id/cellPhone_editText_register"
+                app:layout_constraintStart_toStartOf="@+id/cellPhone_editText_register"
+                app:layout_constraintTop_toBottomOf="@+id/cellPhone_editText_register" />
+
+            <EditText
+                android:id="@+id/rePassword_editText_register"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/rounded_edittext"
+                android:ems="10"
+                android:hint="@string/repeatPassword"
+                android:inputType="textPassword"
+                android:paddingLeft="16dp"
+                app:layout_constraintEnd_toEndOf="@+id/password_editText_register"
+                app:layout_constraintStart_toStartOf="@+id/password_editText_register"
+                app:layout_constraintTop_toBottomOf="@+id/password_editText_register" />
+
+            <Button
+                android:id="@+id/register_button_register"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/rounded_button"
+                android:text="@string/register"
+                app:layout_constraintEnd_toEndOf="@+id/rePassword_editText_register"
+                app:layout_constraintStart_toStartOf="@+id/rePassword_editText_register"
+                app:layout_constraintTop_toBottomOf="@+id/rePassword_editText_register"
+                tools:visibility="visible" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

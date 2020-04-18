@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "792986977125",
+    "firebase_url": "https://coupons-afdbb.firebaseio.com",
+    "project_id": "coupons-afdbb",
+    "storage_bucket": "coupons-afdbb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:792986977125:android:592344f594badfbabd978c",
+        "android_client_info": {
+          "package_name": "triple.solution.mycoupon"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "792986977125-o4bgu5fk2brfe31o8ojk4i4bsel9jafd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBATqgOEAVHDLY7F1lGrNRc0YFuWtV0K-Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "792986977125-o4bgu5fk2brfe31o8ojk4i4bsel9jafd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
