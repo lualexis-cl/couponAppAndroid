@@ -16,6 +16,7 @@ import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import kotlinx.android.synthetic.main.fragment_coupon_list.view.*
 import triple.solution.mycoupon.R
+import triple.solution.mycoupon.activities.rows.NoDataFound
 import triple.solution.mycoupon.helpers.stringToDate
 import triple.solution.mycoupon.helpers.toNow
 import triple.solution.mycoupon.models.ClientCoupon
@@ -23,6 +24,7 @@ import triple.solution.mycoupon.models.Coupon
 import triple.solution.mycoupon.models.Store
 import triple.solution.mycoupon.viewhelpers.LoadingDialog
 import java.util.*
+import kotlin.collections.HashMap
 
 /**
  * A simple [Fragment] subclass.
@@ -32,6 +34,7 @@ class CouponListFragment : Fragment() {
     private val adapter = GroupAdapter<GroupieViewHolder>()
     private var store: Store? = null
     private var loadingDialog: LoadingDialog? = null
+    private val couponList = HashMap<String, Coupon>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,14 +46,40 @@ class CouponListFragment : Fragment() {
 
         this.loadingDialog = LoadingDialog(activity!!)
         view.couponList_RecyclerView.adapter = adapter
-        view.couponList_RecyclerView.addItemDecoration(
-            DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
 
         fetchCurrentStore(view)
         loadForCoupons()
         redirectToDetail()
 
         return view
+    }
+
+    private fun refreshData() {
+        this.adapter.clear()
+        var count = 0
+
+        couponList.forEach {
+
+            val coupon = it.value
+            val key = it.key
+
+            if (coupon != null &&
+                coupon.couponAvailable > 0 &&
+                coupon.expiration.stringToDate() >= Date().toNow()
+            ) {
+                adapter.add(CouponListRow(coupon, key))
+                count++
+            }
+        }
+
+        if (count == 0) {
+            val title = "No se han subido nuevos cupones"
+            val detail = "Pronto el administrador subira nuevos cupones para que puedas disfrutar"
+
+            this.adapter.add(NoDataFound(title, detail))
+        }
+
+        this.loadingDialog?.dismissDialog()
     }
 
     private fun fetchCurrentStore(view: View) {
@@ -82,12 +111,6 @@ class CouponListFragment : Fragment() {
     }
 
     private fun loadForCoupons() {
-        //
-        //https://bk-ca-prd-01.s3.amazonaws.com/sites/burgerking.ca/files/04025-49-DIG-Fresh-Offer-Banner_1000x550_EN-CR.jpg
-        //https://bk-ca-prd-01.s3.amazonaws.com/sites/burgerking.ca/files/03162-78%20299%20Nuggets%20FreshOffersBanner%201000x550%20ENG_CR_0.jpg
-        //https://bk-ca-prd-01.s3.amazonaws.com/sites/burgerking.ca/files/02280-07-2for5-Croissanwich-FreshOffer-Banner-1000x550_CR_EN_0_0.jpg
-
-        var count = 0
         val database = FirebaseDatabase.getInstance()
             .getReference("/coupons")
 
@@ -101,30 +124,19 @@ class CouponListFragment : Fragment() {
 
             }
 
-            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+            override fun onChildChanged(snapshot: DataSnapshot, p1: String?) {
+                val coupon = snapshot.getValue(Coupon::class.java) ?: return
+                couponList[snapshot.key!!] = coupon
 
+                refreshData()
             }
 
             override fun onChildAdded(snapshot: DataSnapshot, p1: String?) {
 
-                val coupon = snapshot.getValue(Coupon::class.java)
+                val coupon = snapshot.getValue(Coupon::class.java) ?: return
+                couponList[snapshot.key!!] = coupon
 
-                if (coupon != null &&
-                    coupon.couponAvailable > 0 &&
-                    coupon.expiration.stringToDate() >= Date().toNow()
-                ) {
-                    adapter.add(CouponListRow(coupon, snapshot.key!!))
-                }
-
-
-
-                if (count == 0) {
-                    loadingDialog?.dismissDialog()
-                }
-                Log.d("CouponList", "Count $count de ${snapshot.children.count()}")
-                count++
-
-
+                refreshData()
             }
 
             override fun onChildRemoved(p0: DataSnapshot) {

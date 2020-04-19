@@ -4,7 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/holo_blue_dark">
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    android:layout_marginTop="8dp"
+    android:background="@drawable/rounded_row">
 
     <ImageView
         android:id="@+id/couponList_imageView"
@@ -13,6 +16,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:background="@drawable/rounded_outline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -27,7 +31,7 @@
         android:layout_marginEnd="8dp"
         android:paddingLeft="16dp"
         android:text="Lleva 3 paga 4"
-        android:textColor="@android:color/white"
+        android:textColor="@color/colorLetterBlack"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -39,10 +43,12 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:paddingRight="16dp"
         android:text="Cupones disponibles 15 de 25"
         android:textAlignment="textEnd"
-        android:textColor="@android:color/white"
+        android:textColor="@color/colorLetterBlack"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/couponName_textView_couponRow"
         app:layout_constraintStart_toStartOf="@+id/couponName_textView_couponRow"
         app:layout_constraintTop_toBottomOf="@+id/couponName_textView_couponRow" />

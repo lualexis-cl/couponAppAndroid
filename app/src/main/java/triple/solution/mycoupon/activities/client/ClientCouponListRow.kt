@@ -1,5 +1,6 @@
 package triple.solution.mycoupon.activities.client
 
+import android.os.Build
 import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
@@ -27,5 +28,9 @@ class ClientCouponListRow(val coupon: ClientCoupon, val keyCoupon: String) : Ite
         Picasso.get().load(coupon.urlImage)
             .fit()
             .into(viewHolder.itemView.coupon_imageView_clientCouponRow)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            //Rounded Image
+            viewHolder.itemView.coupon_imageView_clientCouponRow.clipToOutline = true
+        }
     }
 }

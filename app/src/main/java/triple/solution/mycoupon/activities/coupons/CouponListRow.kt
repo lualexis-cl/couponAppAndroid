@@ -1,5 +1,6 @@
 package triple.solution.mycoupon.activities.coupons
 
+import android.os.Build
 import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
@@ -16,6 +17,9 @@ class CouponListRow(val coupon: Coupon, val key: String) : Item<GroupieViewHolde
         Picasso.get().load(coupon.urlImage)
             .fit()
             .into(viewHolder.itemView.couponList_imageView)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            viewHolder.itemView.couponList_imageView.clipToOutline = true
+        }
         viewHolder.itemView.couponName_textView_couponRow.text = coupon.nameCoupon
         viewHolder.itemView.detailCoupon_textView_couponRow.text =
             "Cupones disponibles: ${coupon.couponAvailable} de ${coupon.totalCoupon}"

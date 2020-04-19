@@ -17,6 +17,7 @@ import com.xwray.groupie.GroupieViewHolder
 import kotlinx.android.synthetic.main.fragment_client_coupon_list.view.*
 import triple.solution.mycoupon.R
 import triple.solution.mycoupon.activities.coupons.CouponDetailAceptedActivity
+import triple.solution.mycoupon.activities.rows.NoDataFound
 import triple.solution.mycoupon.helpers.stringToDate
 import triple.solution.mycoupon.helpers.toNow
 import triple.solution.mycoupon.models.ClientCoupon
@@ -45,9 +46,6 @@ class ClientCouponListFragment : Fragment() {
             inflater.inflate(R.layout.fragment_client_coupon_list, container, false)
 
         myView?.clientCoupon_RecyclerView?.adapter = adapter
-        myView?.clientCoupon_RecyclerView?.addItemDecoration(
-            DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
-        )
 
         loadDataStore(myView!!)
 
@@ -85,18 +83,22 @@ class ClientCouponListFragment : Fragment() {
 
     private fun refreshData() {
         adapter.clear()
-
+        var count = 0
         couponHashMap.forEach {
             val coupon = it.value
             if (coupon.expiration.stringToDate() >= Date().toNow() &&
                 coupon.status) {
                 adapter.add(ClientCouponListRow(it.value, it.key))
+                count++
             }
-
-
         }
 
-        Log.d("ClientCoupon", "fin foreach")
+        if (count == 0) {
+            val title = "No se han encontrado registros"
+            val detail = "Al parecer no posee ningún cupón vigente, favor ir a la sección cupones y seleccionar el de su interes"
+
+            adapter.add(NoDataFound(title, detail))
+        }
     }
 
     private fun loadDataCoupons() {

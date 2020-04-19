@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/holo_blue_dark"
+    android:background="@drawable/color_background"
     tools:context=".activities.client.ClientCouponListFragment">
 
 
@@ -24,8 +24,8 @@
         android:layout_height="50dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Mi Cupón"
-        android:textColor="@android:color/white"
+        android:text="Mis Cupones Vigentes"
+        android:textColor="@color/colorLetterBlack"
         android:textSize="24sp"
         android:textStyle="bold|italic"
         app:layout_constraintEnd_toEndOf="parent"

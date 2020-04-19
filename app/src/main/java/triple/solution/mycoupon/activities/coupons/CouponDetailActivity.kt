@@ -1,6 +1,7 @@
 package triple.solution.mycoupon.activities.coupons
 
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
@@ -44,7 +45,7 @@ class CouponDetailActivity : AppCompatActivity() {
     }
 
     private fun loadDataStore(){
-        nameStore_textView_couponDetail.text = store.nameStore
+        nameStore_textView_couponDetail.text = "Detalle del Cupón"
         Picasso.get().load(store.urlLogo)
             .fit()
             .into(logo_imageView_couponDetail)
@@ -58,6 +59,11 @@ class CouponDetailActivity : AppCompatActivity() {
         numberCoupons_textView_couponDetail.text = coupon.couponAvailable.toString()
         expire_textView_couponDetail.text = coupon.expiration
         condition_textView_couponDetail.text = coupon.text
+
+        //Rounded Image
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            coupon_imageView_couponDetail.clipToOutline = true
+        }
     }
 
     private fun acceptedCoupon(){

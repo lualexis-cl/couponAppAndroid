@@ -2,6 +2,7 @@ package triple.solution.mycoupon.activities.coupons
 
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -48,7 +49,7 @@ class CouponDetailAceptedActivity : AppCompatActivity() {
     }
 
     private fun loadDataStore() {
-        nameStore_textView_couponDetailAccepted.text = store.nameStore
+        nameStore_textView_couponDetailAccepted.text = "Detalle de mi Cupón"
         Picasso.get().load(store.urlLogo)
             .fit()
             .into(logo_imageView_couponDetailAccepted)
@@ -74,6 +75,10 @@ class CouponDetailAceptedActivity : AppCompatActivity() {
                 Picasso.get().load(clientCoupon.urlImage)
                     .fit()
                     .into(coupon_imageView_couponDetailAccepted)
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    coupon_imageView_couponDetailAccepted.clipToOutline = true
+                }
             }
 
         })
@@ -94,6 +99,10 @@ class CouponDetailAceptedActivity : AppCompatActivity() {
         }
 
         qrCode_imageView.setImageBitmap(bitmap)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            qrCode_imageView.clipToOutline = true
+        }
     }
 
     private fun cancelCoupon() {
