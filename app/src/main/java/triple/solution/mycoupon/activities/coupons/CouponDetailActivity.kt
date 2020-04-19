@@ -75,9 +75,22 @@ class CouponDetailActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            this.loadingDialog?.startLoadingDialog()
-
-            validateData()
+            val confirmMessage = SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+            confirmMessage.titleText = "Confirmación"
+            confirmMessage.contentText = "¿Está seguro que desea el cupón?"
+            confirmMessage.confirmText = "Si, Seguro"
+            confirmMessage.cancelText = "No"
+            confirmMessage.setCancelable(false)
+            confirmMessage.setCancelClickListener {
+                it.dismissWithAnimation()
+            }
+            .setConfirmClickListener {
+                it.dismissWithAnimation()
+                this.loadingDialog?.startLoadingDialog()
+                validateData()
+            }
+            confirmMessage.showCancelButton(true)
+            confirmMessage.show()
         }
     }
 

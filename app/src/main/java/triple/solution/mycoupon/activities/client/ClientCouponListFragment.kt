@@ -24,6 +24,7 @@ import triple.solution.mycoupon.models.Coupon
 import triple.solution.mycoupon.models.Store
 import triple.solution.mycoupon.viewhelpers.LoadingDialog
 import java.util.*
+import kotlin.collections.HashMap
 
 
 /**
@@ -33,6 +34,7 @@ class ClientCouponListFragment : Fragment() {
     private val adapter = GroupAdapter<GroupieViewHolder>()
     private var store: Store = Store()
     private var myView: View? = null
+    private val couponHashMap = HashMap<String, ClientCoupon>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,16 +50,16 @@ class ClientCouponListFragment : Fragment() {
         )
 
         loadDataStore(myView!!)
-        loadDataCoupons(myView!!)
-        goToCouponDetail()
 
+        goToCouponDetail()
+        loadDataCoupons()
         return myView
     }
 
     override fun onResume() {
         super.onResume()
 
-        Log.d("ClientCoupon", "Veo el fragment")
+        adapter.notifyDataSetChanged()
     }
 
     private fun loadDataStore(view: View) {
@@ -81,7 +83,23 @@ class ClientCouponListFragment : Fragment() {
         })
     }
 
-    private fun loadDataCoupons(view: View) {
+    private fun refreshData() {
+        adapter.clear()
+
+        couponHashMap.forEach {
+            val coupon = it.value
+            if (coupon.expiration.stringToDate() >= Date().toNow() &&
+                coupon.status) {
+                adapter.add(ClientCouponListRow(it.value, it.key))
+            }
+
+
+        }
+
+        Log.d("ClientCoupon", "fin foreach")
+    }
+
+    private fun loadDataCoupons() {
         val uid = FirebaseAuth.getInstance().uid
         val database = FirebaseDatabase.getInstance()
             .getReference("/clientCoupon/$uid")
@@ -95,22 +113,27 @@ class ClientCouponListFragment : Fragment() {
             override fun onChildMoved(p0: DataSnapshot, p1: String?) {
             }
 
-            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+            override fun onChildChanged(dataSnapshot: DataSnapshot, p1: String?) {
+                val coupon = dataSnapshot.getValue(ClientCoupon::class.java) ?: return
+
+                val keyCoupon = dataSnapshot.key!!
+                couponHashMap[keyCoupon] = coupon
+                Log.d("ClientCoupon", "Updated data")
+
+                refreshData()
             }
 
             override fun onChildAdded(dataSnapshot: DataSnapshot, p1: String?) {
                 val coupon = dataSnapshot.getValue(ClientCoupon::class.java) ?: return
 
-                if (coupon.expiration.stringToDate() >= Date().toNow() &&
-                    coupon.status) {
-                    val keyCoupon = dataSnapshot.key!!
-                    adapter.add(ClientCouponListRow(coupon, keyCoupon))
-                }
+                val keyCoupon = dataSnapshot.key!!
+                couponHashMap[keyCoupon] = coupon
 
                 if (count == 0) {
                     loading.dismissDialog()
                 }
                 count++
+                refreshData()
             }
 
             override fun onChildRemoved(p0: DataSnapshot) {
