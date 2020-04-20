@@ -8,6 +8,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import triple.solution.mycoupon.R
 import triple.solution.mycoupon.activities.client.ClientCouponListFragment
 import triple.solution.mycoupon.activities.coupons.CouponListFragment
+import triple.solution.mycoupon.activities.employees.EmployeeFragment
 import triple.solution.mycoupon.activities.register.EditPerfilFragment
 import triple.solution.mycoupon.activities.register.LoginFragment
 
@@ -31,6 +32,13 @@ class MainActivity : AppCompatActivity() {
                 R.id.action_coupon -> {
                     title = resources.getString(R.string.myCoupons)
                     loadFragment(ClientCouponListFragment())
+
+                    return@setOnNavigationItemSelectedListener true
+                }
+
+                R.id.action_scan -> {
+                    loadFragment(EmployeeFragment())
+
                     return@setOnNavigationItemSelectedListener true
                 }
 

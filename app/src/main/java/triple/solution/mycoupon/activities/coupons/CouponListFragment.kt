@@ -2,6 +2,7 @@ package triple.solution.mycoupon.activities.coupons
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -114,14 +115,15 @@ class CouponListFragment : Fragment() {
         val database = FirebaseDatabase.getInstance()
             .getReference("/coupons")
 
+        Log.d("CouponList", "Llamada a Loading")
+
         this.loadingDialog?.startLoadingDialog()
+
         database.addChildEventListener(object: ChildEventListener {
             override fun onCancelled(p0: DatabaseError) {
-
             }
 
             override fun onChildMoved(p0: DataSnapshot, p1: String?) {
-
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, p1: String?) {
@@ -132,7 +134,6 @@ class CouponListFragment : Fragment() {
             }
 
             override fun onChildAdded(snapshot: DataSnapshot, p1: String?) {
-
                 val coupon = snapshot.getValue(Coupon::class.java) ?: return
                 couponList[snapshot.key!!] = coupon
 
@@ -149,11 +150,13 @@ class CouponListFragment : Fragment() {
     private fun redirectToDetail() {
         adapter.setOnItemClickListener { item, _ ->
 
-            val couponListRow = item as CouponListRow
-            val coupon = couponListRow.coupon
-            val keyCoupon = couponListRow.key
+            if (item is CouponListRow) {
+                val couponListRow = item as CouponListRow
+                val coupon = couponListRow.coupon
+                val keyCoupon = couponListRow.key
 
-            existCoupon(keyCoupon, coupon)
+                existCoupon(keyCoupon, coupon)
+            }
         }
     }
 

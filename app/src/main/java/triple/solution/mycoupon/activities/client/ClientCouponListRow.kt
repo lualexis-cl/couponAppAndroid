@@ -14,7 +14,7 @@ import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 import java.util.*
 
-class ClientCouponListRow(val coupon: ClientCoupon, val keyCoupon: String) : Item<GroupieViewHolder>() {
+class ClientCouponListRow(private val coupon: ClientCoupon, val keyCoupon: String) : Item<GroupieViewHolder>() {
     override fun getLayout(): Int {
         return R.layout.client_coupon_list_row
     }

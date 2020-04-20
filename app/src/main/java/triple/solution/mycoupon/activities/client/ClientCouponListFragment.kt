@@ -7,8 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.squareup.picasso.Picasso
@@ -21,7 +19,6 @@ import triple.solution.mycoupon.activities.rows.NoDataFound
 import triple.solution.mycoupon.helpers.stringToDate
 import triple.solution.mycoupon.helpers.toNow
 import triple.solution.mycoupon.models.ClientCoupon
-import triple.solution.mycoupon.models.Coupon
 import triple.solution.mycoupon.models.Store
 import triple.solution.mycoupon.viewhelpers.LoadingDialog
 import java.util.*
@@ -36,6 +33,7 @@ class ClientCouponListFragment : Fragment() {
     private var store: Store = Store()
     private var myView: View? = null
     private val couponHashMap = HashMap<String, ClientCoupon>()
+    private var loading: LoadingDialog? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,6 +43,7 @@ class ClientCouponListFragment : Fragment() {
         myView =
             inflater.inflate(R.layout.fragment_client_coupon_list, container, false)
 
+        this.loading = LoadingDialog(activity!!)
         myView?.clientCoupon_RecyclerView?.adapter = adapter
 
         loadDataStore(myView!!)
@@ -94,20 +93,27 @@ class ClientCouponListFragment : Fragment() {
         }
 
         if (count == 0) {
-            val title = "No se han encontrado registros"
-            val detail = "Al parecer no posee ningún cupón vigente, favor ir a la sección cupones y seleccionar el de su interes"
-
-            adapter.add(NoDataFound(title, detail))
+            showNoDataFound()
         }
+
+        this.loading?.dismissDialog()
+    }
+
+    private fun showNoDataFound() {
+        val title = "No se han encontrado registros"
+        val detail = "Al parecer no posee ningún cupón vigente, favor ir a la sección cupones y seleccionar el de su interes"
+
+        adapter.add(NoDataFound(title, detail))
     }
 
     private fun loadDataCoupons() {
         val uid = FirebaseAuth.getInstance().uid
         val database = FirebaseDatabase.getInstance()
             .getReference("/clientCoupon/$uid")
-        val loading = LoadingDialog(activity!!)
-        loading.startLoadingDialog()
-        var count = 0
+
+        this.loading?.startLoadingDialog()
+        var existsData = false
+
         database.addChildEventListener(object: ChildEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
@@ -121,7 +127,7 @@ class ClientCouponListFragment : Fragment() {
                 val keyCoupon = dataSnapshot.key!!
                 couponHashMap[keyCoupon] = coupon
                 Log.d("ClientCoupon", "Updated data")
-
+                existsData = true
                 refreshData()
             }
 
@@ -130,11 +136,7 @@ class ClientCouponListFragment : Fragment() {
 
                 val keyCoupon = dataSnapshot.key!!
                 couponHashMap[keyCoupon] = coupon
-
-                if (count == 0) {
-                    loading.dismissDialog()
-                }
-                count++
+                existsData = false
                 refreshData()
             }
 
@@ -143,21 +145,25 @@ class ClientCouponListFragment : Fragment() {
 
         })
 
-        if (count == 0) {
-            loading.dismissDialog()
+        if (!existsData) {
+            this.loading?.dismissDialog()
+            showNoDataFound()
         }
     }
 
     private fun goToCouponDetail() {
         adapter.setOnItemClickListener { item, _ ->
-            val intent = Intent(activity, CouponDetailAceptedActivity::class.java)
-            val row = item as ClientCouponListRow
-            val keyCoupon = row.keyCoupon
 
-            intent.putExtra("storeAccepted", store)
-            intent.putExtra("keyCouponAccepted", keyCoupon)
+            if (item is ClientCouponListRow) {
+                val row = item as ClientCouponListRow
+                val keyCoupon = row.keyCoupon
 
-            startActivity(intent)
+                val intent = Intent(activity, CouponDetailAceptedActivity::class.java)
+                intent.putExtra("storeAccepted", store)
+                intent.putExtra("keyCouponAccepted", keyCoupon)
+
+                startActivity(intent)
+            }
         }
     }
 }

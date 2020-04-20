@@ -8,6 +8,11 @@
         android:icon="@drawable/ic_my_coupon"
         android:title="@string/myCoupons" />
 
+    <item
+        android:id="@+id/action_scan"
+        android:icon="@drawable/ic_qr_code"
+        android:title="Scan QR" />
+
     <item android:title="@string/MyPerfil"
         android:id="@+id/action_perfil"
         android:icon="@drawable/ic_team"/>

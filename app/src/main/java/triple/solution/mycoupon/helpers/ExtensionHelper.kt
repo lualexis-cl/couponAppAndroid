@@ -47,3 +47,9 @@ fun String.stringToDate() : Date {
     val format = SimpleDateFormat("yyyy-MM-dd")
     return format.parse(this)
 }
+
+fun Fragment?.runOnUiThread(action: () -> Unit) {
+    this ?: return
+    if (!isAdded) return // Fragment not attached to an Activity
+    activity?.runOnUiThread(action)
+}
