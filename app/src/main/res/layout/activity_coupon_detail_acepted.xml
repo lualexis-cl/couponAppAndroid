@@ -55,42 +55,112 @@
                 app:layout_constraintTop_toBottomOf="@+id/nameStore_textView_couponDetailAccepted"
                 app:srcCompat="@drawable/station" />
 
-            <TextView
-                android:id="@+id/nameCoupon_textView_couponDetailAccepted"
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:text="TextView"
-                android:textColor="@color/colorLetterBlack"
-                android:textStyle="bold"
+                android:id="@+id/groupItems"
+                android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/coupon_imageView_couponDetailAccepted" />
+                app:layout_constraintTop_toBottomOf="@+id/coupon_imageView_couponDetailAccepted">
 
-            <TextView
-                android:id="@+id/textView8"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="@string/expire"
-                android:textColor="@color/colorLetterBlack"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/nameCoupon_textView_couponDetailAccepted" />
 
-            <TextView
-                android:id="@+id/expire_textView_couponDetailAccepted"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:text="TextView"
-                android:textColor="@color/colorLetterBlack"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/textView8"
-                app:layout_constraintTop_toBottomOf="@+id/nameCoupon_textView_couponDetailAccepted" />
+
+                <TextView
+                    android:id="@+id/nameCoupon_textView_couponDetailAccepted"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="TextView"
+                    android:textColor="@color/colorLetterBlack"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/groupItems"
+                     />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textView8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="@string/expire"
+                        android:textColor="@color/colorLetterBlack" />
+
+                    <TextView
+                        android:id="@+id/expire_textView_couponDetailAccepted"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:text="TextView"
+                        android:textColor="@color/colorLetterBlack"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/status_linearLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textView9"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="Estado:"
+                        android:textColor="@color/colorLetterBlack" />
+
+                    <TextView
+                        android:id="@+id/status_textView_couponDetailAccepted"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:text="TextView"
+                        android:textColor="@color/colorLetterBlack"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/dateStatus_linearLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textView10"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="Fecha Estado:"
+                        android:textColor="@color/colorLetterBlack" />
+
+                    <TextView
+                        android:id="@+id/dateStatus_textView_couponDetailAccepted"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:text="TextView"
+                        android:textColor="@color/colorLetterBlack"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
 
             <TextView
                 android:id="@+id/condition_textView_couponDetailAccepted"
@@ -105,7 +175,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/expire_textView_couponDetailAccepted" />
+                app:layout_constraintTop_toBottomOf="@+id/groupItems" />
 
             <ImageView
                 android:id="@+id/qrCode_imageView"
@@ -135,6 +205,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/qrCode_imageView" />
+
+
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

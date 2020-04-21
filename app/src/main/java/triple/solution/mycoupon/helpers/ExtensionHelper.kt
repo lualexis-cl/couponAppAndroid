@@ -43,6 +43,11 @@ fun Date.countDays(date: Date) : Int {
     /*TimeUnit.MILLISECONDS.toDays(timeExpiration)*/
 }
 
+fun Date.todayToString() : String {
+    val format = SimpleDateFormat("yyyy-MM-dd")
+    return format.format(this)
+}
+
 fun String.stringToDate() : Date {
     val format = SimpleDateFormat("yyyy-MM-dd")
     return format.parse(this)

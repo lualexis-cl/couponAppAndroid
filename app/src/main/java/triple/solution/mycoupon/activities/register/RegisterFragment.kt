@@ -13,6 +13,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_register.view.*
 
 import triple.solution.mycoupon.R
+import triple.solution.mycoupon.enums.TypeClient
 import triple.solution.mycoupon.helpers.hideKeyboard
 import triple.solution.mycoupon.models.User
 import triple.solution.mycoupon.viewhelpers.LoadingDialog
@@ -125,6 +126,7 @@ class RegisterFragment : Fragment() {
         val uid = FirebaseAuth.getInstance().uid
 
         user.uid = uid.toString()
+        user.typeClient = TypeClient.CLIENT.value
         val database = FirebaseDatabase.getInstance()
             .getReference("/users/$uid")
 

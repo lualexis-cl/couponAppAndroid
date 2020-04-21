@@ -14,6 +14,7 @@ import com.google.zxing.qrcode.QRCodeWriter
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_coupon_detail_acepted.*
 import triple.solution.mycoupon.R
+import triple.solution.mycoupon.enums.StatusClientCoupon
 import triple.solution.mycoupon.helpers.stringToDate
 import triple.solution.mycoupon.helpers.toNow
 import triple.solution.mycoupon.models.ClientCoupon
@@ -35,6 +36,8 @@ class CouponDetailAceptedActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_coupon_detail_acepted)
         supportActionBar?.hide()
+        status_linearLayout.visibility = View.GONE
+        dateStatus_linearLayout.visibility = View.GONE
 
         this.loadingDialog = LoadingDialog(this)
         this.messageDialog = MessageDialog(this)
@@ -71,6 +74,16 @@ class CouponDetailAceptedActivity : AppCompatActivity() {
                 nameCoupon_textView_couponDetailAccepted.text = clientCoupon.nameCoupon
                 expire_textView_couponDetailAccepted.text = clientCoupon.expiration
                 condition_textView_couponDetailAccepted.text = clientCoupon.text
+
+                if (clientCoupon.status == StatusClientCoupon.APPROVED.value) {
+                    status_linearLayout.visibility = View.VISIBLE
+                    dateStatus_linearLayout.visibility = View.VISIBLE
+
+                    status_textView_couponDetailAccepted.text = "Cupón utilizado"
+                    dateStatus_textView_couponDetailAccepted.text = clientCoupon.dateStatus
+                    qrCode_imageView.visibility = View.GONE
+                    cancelCoupon_button.visibility = View.GONE
+                }
 
                 Picasso.get().load(clientCoupon.urlImage)
                     .fit()
@@ -132,7 +145,7 @@ class CouponDetailAceptedActivity : AppCompatActivity() {
         val database = FirebaseDatabase.getInstance()
             .getReference("/clientCoupon/$uid/$keyCoupon")
 
-        this.clientCoupon.status = false
+        this.clientCoupon.status = StatusClientCoupon.DELETED.value
 
         database.setValue(this.clientCoupon)
             .addOnCompleteListener {

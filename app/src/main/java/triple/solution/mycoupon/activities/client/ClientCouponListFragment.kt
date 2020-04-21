@@ -16,6 +16,7 @@ import kotlinx.android.synthetic.main.fragment_client_coupon_list.view.*
 import triple.solution.mycoupon.R
 import triple.solution.mycoupon.activities.coupons.CouponDetailAceptedActivity
 import triple.solution.mycoupon.activities.rows.NoDataFound
+import triple.solution.mycoupon.enums.StatusClientCoupon
 import triple.solution.mycoupon.helpers.stringToDate
 import triple.solution.mycoupon.helpers.toNow
 import triple.solution.mycoupon.models.ClientCoupon
@@ -86,7 +87,7 @@ class ClientCouponListFragment : Fragment() {
         couponHashMap.forEach {
             val coupon = it.value
             if (coupon.expiration.stringToDate() >= Date().toNow() &&
-                coupon.status) {
+                coupon.status == StatusClientCoupon.VALID.value) {
                 adapter.add(ClientCouponListRow(it.value, it.key))
                 count++
             }

@@ -38,7 +38,7 @@ class EmployeeFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_employee, container, false)
         codeScanner = CodeScanner(context!!, view.scannerView)
-        validateQr(view)
+        validateQr()
         checkPermission()
 
         return view
@@ -76,7 +76,7 @@ class EmployeeFragment : Fragment() {
         }
     }
 
-    private fun validateQr(view: View) {
+    private fun validateQr() {
         codeScanner.camera = CodeScanner.CAMERA_BACK
         codeScanner.formats = CodeScanner.ALL_FORMATS
         codeScanner.autoFocusMode = AutoFocusMode.SAFE
@@ -84,17 +84,20 @@ class EmployeeFragment : Fragment() {
         codeScanner.isAutoFocusEnabled = true
         codeScanner.isFlashEnabled = false
 
-
-
         codeScanner.decodeCallback = DecodeCallback {
             runOnUiThread {
                 Toast.makeText(context!!, "Scan Result ${it.text}", Toast.LENGTH_LONG)
                 Log.d("CodeQR", "Scan Result ${it.text}")
 
                 if (it.text.contains("__")) {
-                    loadFragment(EditPerfilFragment())
+                    val bundle = Bundle()
+                    bundle.putString("keyQrCode", it.text)
+                    val fragment = CouponApprovedFragment()
+                    fragment.arguments = bundle
+
+                    loadFragment(fragment)
                 } else {
-                    loadFragment(LoginFragment())
+                    loadFragment(CouponDeclinedFragment())
                 }
             }
         }

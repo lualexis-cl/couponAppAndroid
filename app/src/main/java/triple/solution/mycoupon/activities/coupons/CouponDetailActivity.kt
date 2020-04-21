@@ -12,6 +12,7 @@ import com.google.firebase.database.*
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_coupon_detail.*
 import triple.solution.mycoupon.R
+import triple.solution.mycoupon.enums.StatusClientCoupon
 import triple.solution.mycoupon.helpers.stringToDate
 import triple.solution.mycoupon.helpers.toNow
 import triple.solution.mycoupon.models.ClientCoupon
@@ -168,7 +169,7 @@ class CouponDetailActivity : AppCompatActivity() {
         clientCoupon.text = coupon.text
         clientCoupon.totalCoupon = coupon.totalCoupon
         clientCoupon.urlImage = coupon.urlImage
-        clientCoupon.status = true
+        clientCoupon.status = StatusClientCoupon.VALID.value
 
         database.setValue(clientCoupon)
             .addOnCompleteListener {

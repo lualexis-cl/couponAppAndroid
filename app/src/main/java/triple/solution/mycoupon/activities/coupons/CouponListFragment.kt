@@ -18,6 +18,7 @@ import com.xwray.groupie.GroupieViewHolder
 import kotlinx.android.synthetic.main.fragment_coupon_list.view.*
 import triple.solution.mycoupon.R
 import triple.solution.mycoupon.activities.rows.NoDataFound
+import triple.solution.mycoupon.enums.StatusClientCoupon
 import triple.solution.mycoupon.helpers.stringToDate
 import triple.solution.mycoupon.helpers.toNow
 import triple.solution.mycoupon.models.ClientCoupon
@@ -64,13 +65,8 @@ class CouponListFragment : Fragment() {
             val coupon = it.value
             val key = it.key
 
-            if (coupon != null &&
-                coupon.couponAvailable > 0 &&
-                coupon.expiration.stringToDate() >= Date().toNow()
-            ) {
-                adapter.add(CouponListRow(coupon, key))
-                count++
-            }
+            adapter.add(CouponListRow(coupon, key))
+            count++
         }
 
         if (count == 0) {
@@ -179,7 +175,9 @@ class CouponListFragment : Fragment() {
                 val clientCoupon = dataSnapshot.getValue(ClientCoupon::class.java)
 
                 if (clientCoupon != null &&
-                    clientCoupon.status) {
+                    (clientCoupon.status == StatusClientCoupon.VALID.value ||
+                     clientCoupon.status == StatusClientCoupon.APPROVED.value)
+                ) {
 
                     val intent = Intent(activity, CouponDetailAceptedActivity::class.java)
                     intent.putExtra("storeAccepted", store)
