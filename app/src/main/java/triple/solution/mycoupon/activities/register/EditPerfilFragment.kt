@@ -21,9 +21,6 @@ import triple.solution.mycoupon.models.User
 import triple.solution.mycoupon.viewhelpers.LoadingDialog
 import triple.solution.mycoupon.viewhelpers.MessageDialog
 
-/**
- * A simple [Fragment] subclass.
- */
 class EditPerfilFragment : Fragment() {
 
     private var loadingDialog: LoadingDialog? = null
@@ -61,7 +58,6 @@ class EditPerfilFragment : Fragment() {
                 view.email_editText_editPerfil.setText(user.email)
                 view.name_editText_editPerfil.setText(user.name)
                 view.lastName_editText_editPerfil.setText(user.lastName)
-                view.cellPhone_editText_editPerfil.setText(user.cellPhone)
             }
 
         })
@@ -90,7 +86,6 @@ class EditPerfilFragment : Fragment() {
             val user = User(view.email_editText_editPerfil.text.toString(),
                             view.name_editText_editPerfil.text.toString(),
                             view.lastName_editText_editPerfil.text.toString(),
-                            view.cellPhone_editText_editPerfil.text.toString(),
                             uid!!)
 
             val database = FirebaseDatabase.getInstance()
@@ -168,11 +163,6 @@ class EditPerfilFragment : Fragment() {
 
         if (view.lastName_editText_editPerfil.text.toString().isEmpty()) {
             view.lastName_editText_editPerfil.error = "Apellido es obligatorio"
-            result = false
-        }
-
-        if (view.cellPhone_editText_editPerfil.text.toString().isEmpty()) {
-            view.cellPhone_editText_editPerfil.error = "Celular es obligatorio"
             result = false
         }
 

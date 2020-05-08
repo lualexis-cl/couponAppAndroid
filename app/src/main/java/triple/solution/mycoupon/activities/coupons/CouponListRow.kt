@@ -24,6 +24,8 @@ class CouponListRow(val coupon: Coupon, val key: String) : Item<GroupieViewHolde
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             viewHolder.itemView.couponList_imageView.clipToOutline = true
         }
+
+        viewHolder.itemView.detailCoupon_textView_couponRow.setTextColor(Color.parseColor("#020202"))
         viewHolder.itemView.couponName_textView_couponRow.text = coupon.nameCoupon
         viewHolder.itemView.detailCoupon_textView_couponRow.text =
             "Cupones disponibles: ${coupon.couponAvailable} de ${coupon.totalCoupon}"
@@ -34,8 +36,6 @@ class CouponListRow(val coupon: Coupon, val key: String) : Item<GroupieViewHolde
         }
 
         if (coupon.expiration.stringToDate() < Date().toNow()) {
-            val color = Color()
-
             viewHolder.itemView.detailCoupon_textView_couponRow.setTextColor(Color.RED)
             viewHolder.itemView.detailCoupon_textView_couponRow.text = "Cupón vencido"
         }

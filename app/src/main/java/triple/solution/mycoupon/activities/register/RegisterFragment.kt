@@ -13,6 +13,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_register.view.*
 
 import triple.solution.mycoupon.R
+import triple.solution.mycoupon.activities.principal.MainActivity
 import triple.solution.mycoupon.enums.TypeClient
 import triple.solution.mycoupon.helpers.hideKeyboard
 import triple.solution.mycoupon.models.User
@@ -44,7 +45,6 @@ class RegisterFragment : Fragment() {
         val email = view.email_editText_register
         val name = view.name_editText_register
         val lastName = view.lastName_editText_register
-        val cellPhone = view.cellPhone_editText_register
         val password = view.password_editText_register
         val rePassword = view.rePassword_editText_register
 
@@ -63,11 +63,6 @@ class RegisterFragment : Fragment() {
             isGonnaRegisterUser = false
         }
 
-        if (cellPhone.text.isEmpty()) {
-            cellPhone.error = "Celular es obligatorio"
-            isGonnaRegisterUser = false
-        }
-
         if (password.text.isEmpty()) {
             password.error = "Contraseña es obligatorio"
             isGonnaRegisterUser = false
@@ -82,7 +77,7 @@ class RegisterFragment : Fragment() {
         if (isGonnaRegisterUser) {
 
             user = User(email.text.toString(), name.text.toString(),
-                lastName.text.toString(), cellPhone.text.toString(), "")
+                lastName.text.toString(), "")
         }
 
         return user
@@ -111,7 +106,7 @@ class RegisterFragment : Fragment() {
                         return@addOnCompleteListener
                     }
 
-                    saveUser(view, user)
+                    saveUser(user)
 
                 }.addOnFailureListener {
                     this.loadingDialog?.dismissDialog()
@@ -122,11 +117,10 @@ class RegisterFragment : Fragment() {
         }
     }
 
-    private fun saveUser(view: View, user: User) {
+    private fun saveUser(user: User) {
         val uid = FirebaseAuth.getInstance().uid
 
         user.uid = uid.toString()
-        user.typeClient = TypeClient.CLIENT.value
         val database = FirebaseDatabase.getInstance()
             .getReference("/users/$uid")
 
@@ -142,6 +136,8 @@ class RegisterFragment : Fragment() {
     }
 
     private fun redirectHome() {
+        val mainActivity = activity as MainActivity
+        mainActivity.visibilityMenu()
         activity?.navigationView?.selectedItemId = R.id.action_home
     }
 }

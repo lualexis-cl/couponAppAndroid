@@ -1,13 +1,12 @@
 package triple.solution.mycoupon.activities.principal
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_main.*
 import triple.solution.mycoupon.R
 import triple.solution.mycoupon.activities.client.ClientCouponListFragment
@@ -17,6 +16,7 @@ import triple.solution.mycoupon.activities.register.EditPerfilFragment
 import triple.solution.mycoupon.activities.register.LoginFragment
 import triple.solution.mycoupon.enums.TypeClient
 import triple.solution.mycoupon.models.User
+import triple.solution.mycoupon.models.UserApplication
 
 class MainActivity : AppCompatActivity() {
 
@@ -69,6 +69,7 @@ class MainActivity : AppCompatActivity() {
     fun visibilityMenu() {
         var visibilityCoupons = true
         navigationView.menu.findItem(R.id.action_scan).isVisible = false
+        deleteSharedPreferences()
 
         if (FirebaseAuth.getInstance().currentUser == null){
             visibilityCoupons = false
@@ -91,24 +92,60 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadAdminMenus() {
-        val uid = FirebaseAuth.getInstance().uid
+        val currentUser = FirebaseAuth.getInstance().currentUser
 
         val database = FirebaseDatabase.getInstance()
-            .getReference("/users/$uid")
+            .getReference("/userApplication")
 
-        database.addListenerForSingleValueEvent(object: ValueEventListener {
+        database.addChildEventListener(object: ChildEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
 
-            override fun onDataChange(data: DataSnapshot) {
-                val user = data.getValue(User::class.java) ?: return
+            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+            }
 
-                if (user.typeClient == TypeClient.ADMIN.value ||
-                    user.typeClient == TypeClient.SERVER.value) {
+            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+            }
+
+            override fun onChildAdded(data: DataSnapshot, p1: String?) {
+                val userApplication = data.getValue(UserApplication::class.java) ?: return
+
+                if (currentUser?.email?.toLowerCase() == userApplication.email.toLowerCase() &&
+                   (userApplication.userType == TypeClient.ADMIN.value ||
+                    userApplication.userType == TypeClient.SERVER.value)) {
+
                     navigationView.menu.findItem(R.id.action_scan).isVisible = true
+
+                    if (userApplication.userType == TypeClient.SERVER.value) {
+                        navigationView.menu.findItem(R.id.action_coupon).isVisible = false
+                    }
+
+                    writeOnSharedPreferences(userApplication)
                 }
+
+                Log.d("CouponAdmin", userApplication.email)
+            }
+
+            override fun onChildRemoved(p0: DataSnapshot) {
+                navigationView.menu.findItem(R.id.action_scan).isVisible = true
             }
 
         })
+    }
+
+    private fun writeOnSharedPreferences(userApplication: UserApplication) {
+        val shared = this.getPreferences(Context.MODE_PRIVATE) ?: return
+        with (shared.edit()) {
+            putInt("userType", userApplication.userType)
+            commit()
+        }
+    }
+
+    private fun deleteSharedPreferences() {
+        val shared = this.getPreferences(Context.MODE_PRIVATE) ?: return
+        with (shared.edit()) {
+            remove("userType")
+            commit()
+        }
     }
 }

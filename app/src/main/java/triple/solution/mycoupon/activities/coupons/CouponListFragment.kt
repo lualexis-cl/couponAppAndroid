@@ -1,15 +1,14 @@
 package triple.solution.mycoupon.activities.coupons
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
+import cn.pedant.SweetAlert.SweetAlertDialog
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.squareup.picasso.Picasso
@@ -19,23 +18,18 @@ import kotlinx.android.synthetic.main.fragment_coupon_list.view.*
 import triple.solution.mycoupon.R
 import triple.solution.mycoupon.activities.rows.NoDataFound
 import triple.solution.mycoupon.enums.StatusClientCoupon
-import triple.solution.mycoupon.helpers.stringToDate
-import triple.solution.mycoupon.helpers.toNow
+import triple.solution.mycoupon.enums.TypeClient
 import triple.solution.mycoupon.models.ClientCoupon
 import triple.solution.mycoupon.models.Coupon
 import triple.solution.mycoupon.models.Store
-import triple.solution.mycoupon.viewhelpers.LoadingDialog
-import java.util.*
-import kotlin.collections.HashMap
+import triple.solution.mycoupon.viewhelpers.MessageDialog
 
 /**
  * A simple [Fragment] subclass.
  */
 class CouponListFragment : Fragment() {
-
     private val adapter = GroupAdapter<GroupieViewHolder>()
     private var store: Store? = null
-    private var loadingDialog: LoadingDialog? = null
     private val couponList = HashMap<String, Coupon>()
 
     override fun onCreateView(
@@ -45,8 +39,8 @@ class CouponListFragment : Fragment() {
     ): View? {
         val view =
             inflater.inflate(R.layout.fragment_coupon_list, container, false)
+        resetView(view)
 
-        this.loadingDialog = LoadingDialog(activity!!)
         view.couponList_RecyclerView.adapter = adapter
 
         fetchCurrentStore(view)
@@ -56,11 +50,17 @@ class CouponListFragment : Fragment() {
         return view
     }
 
+    private fun resetView(view: View) {
+        view.nameStore_textView_couponList.text = "";
+        view.logo_imageView_couponList.setImageBitmap(null)
+    }
+
     private fun refreshData() {
         this.adapter.clear()
         var count = 0
 
-        couponList.forEach {
+        couponList.toSortedMap(reverseOrder())
+        .forEach {
 
             val coupon = it.value
             val key = it.key
@@ -75,8 +75,6 @@ class CouponListFragment : Fragment() {
 
             this.adapter.add(NoDataFound(title, detail))
         }
-
-        this.loadingDialog?.dismissDialog()
     }
 
     private fun fetchCurrentStore(view: View) {
@@ -110,12 +108,9 @@ class CouponListFragment : Fragment() {
     private fun loadForCoupons() {
         val database = FirebaseDatabase.getInstance()
             .getReference("/coupons")
-
-        Log.d("CouponList", "Llamada a Loading")
-
-        this.loadingDialog?.startLoadingDialog()
-
-        database.addChildEventListener(object: ChildEventListener {
+        database
+            .orderByPriority()
+        .addChildEventListener(object: ChildEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
 
@@ -130,21 +125,42 @@ class CouponListFragment : Fragment() {
             }
 
             override fun onChildAdded(snapshot: DataSnapshot, p1: String?) {
+                if (!snapshot.exists()) {
+                    Log.d("CouponList", "NO hay registros")
+                }
+
+
                 val coupon = snapshot.getValue(Coupon::class.java) ?: return
                 couponList[snapshot.key!!] = coupon
 
                 refreshData()
             }
 
-            override fun onChildRemoved(p0: DataSnapshot) {
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+                Log.d("CouponList", snapshot.key)
+                couponList.remove(snapshot.key!!)
 
+                refreshData()
             }
 
         })
+
     }
 
     private fun redirectToDetail() {
         adapter.setOnItemClickListener { item, _ ->
+
+            val shared = activity?.getPreferences(Context.MODE_PRIVATE)
+
+            if (shared != null) {
+                val type = shared.getInt("userType", 0)
+
+                if (type == TypeClient.SERVER.value) {
+                    val dialog = MessageDialog(activity!!)
+                    dialog.showDialog("Error", "No es posible realizar está acción", SweetAlertDialog.ERROR_TYPE)
+                    return@setOnItemClickListener
+                }
+            }
 
             if (item is CouponListRow) {
                 val couponListRow = item as CouponListRow
@@ -200,5 +216,4 @@ class CouponListFragment : Fragment() {
 
         startActivity(intent)
     }
-
 }

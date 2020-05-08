@@ -67,20 +67,6 @@
                 app:layout_constraintTop_toBottomOf="@+id/name_editText_register" />
 
             <EditText
-                android:id="@+id/cellPhone_editText_register"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/rounded_edittext"
-                android:ems="10"
-                android:hint="@string/cellPhone"
-                android:inputType="phone"
-                android:paddingLeft="16dp"
-                app:layout_constraintEnd_toEndOf="@+id/lastName_editText_register"
-                app:layout_constraintStart_toStartOf="@+id/lastName_editText_register"
-                app:layout_constraintTop_toBottomOf="@+id/lastName_editText_register" />
-
-            <EditText
                 android:id="@+id/password_editText_register"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
@@ -90,9 +76,9 @@
                 android:hint="@string/password"
                 android:inputType="textPassword"
                 android:paddingLeft="16dp"
-                app:layout_constraintEnd_toEndOf="@+id/cellPhone_editText_register"
-                app:layout_constraintStart_toStartOf="@+id/cellPhone_editText_register"
-                app:layout_constraintTop_toBottomOf="@+id/cellPhone_editText_register" />
+                app:layout_constraintEnd_toEndOf="@+id/lastName_editText_register"
+                app:layout_constraintStart_toStartOf="@+id/lastName_editText_register"
+                app:layout_constraintTop_toBottomOf="@+id/lastName_editText_register" />
 
             <EditText
                 android:id="@+id/rePassword_editText_register"

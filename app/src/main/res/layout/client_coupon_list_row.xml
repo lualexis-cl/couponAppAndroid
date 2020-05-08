@@ -45,6 +45,7 @@
         android:layout_marginTop="8dp"
         android:paddingRight="16dp"
         android:text="Expira en 10 días"
+        android:textStyle="bold"
         android:textAlignment="textEnd"
         android:textColor="@color/colorLetterBlack"
         app:layout_constraintEnd_toEndOf="@+id/couponName_textView_clientCouponRow"

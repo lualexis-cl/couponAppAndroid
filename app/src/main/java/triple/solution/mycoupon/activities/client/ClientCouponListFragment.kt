@@ -84,14 +84,15 @@ class ClientCouponListFragment : Fragment() {
     private fun refreshData() {
         adapter.clear()
         var count = 0
-        couponHashMap.forEach {
-            val coupon = it.value
-            if (coupon.expiration.stringToDate() >= Date().toNow() &&
-                coupon.status == StatusClientCoupon.VALID.value) {
-                adapter.add(ClientCouponListRow(it.value, it.key))
-                count++
+        couponHashMap
+            .toSortedMap(reverseOrder())
+            .forEach {
+                val coupon = it.value
+                if (coupon.status != StatusClientCoupon.DELETED.value) {
+                    adapter.add(ClientCouponListRow(it.value, it.key))
+                    count++
+                }
             }
-        }
 
         if (count == 0) {
             showNoDataFound()
