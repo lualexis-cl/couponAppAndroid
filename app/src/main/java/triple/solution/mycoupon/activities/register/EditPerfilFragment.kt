@@ -64,7 +64,6 @@ class EditPerfilFragment : Fragment() {
     }
 
     private fun logout(view: View) {
-
         view.logout_button_editPerfil.setOnClickListener {
             FirebaseAuth.getInstance().signOut()
             val mainActivity = activity as MainActivity

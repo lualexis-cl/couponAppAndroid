@@ -66,18 +66,26 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        Log.d("CouponAdmin", "" + FirebaseAuth.getInstance().currentUser?.metadata?.lastSignInTimestamp.toString())
+    }
+
     fun visibilityMenu() {
-        var visibilityCoupons = true
         navigationView.menu.findItem(R.id.action_scan).isVisible = false
+        navigationView.menu.findItem(R.id.action_coupon).isVisible = false
         deleteSharedPreferences()
 
-        if (FirebaseAuth.getInstance().currentUser == null){
-            visibilityCoupons = false
-        } else {
-            loadAdminMenus()
-        }
-
-        navigationView.menu.findItem(R.id.action_coupon).isVisible = visibilityCoupons
+        FirebaseAuth.getInstance().currentUser?.reload()
+            ?.addOnCompleteListener {
+                if (it.isSuccessful) {
+                    navigationView.menu.findItem(R.id.action_coupon).isVisible = true
+                    loadAdminMenus()
+                }
+            }?.addOnFailureListener {
+                Log.d("CouponAdmin", "Current Error $it")
+            }
     }
 
     private fun loadFragment(fragment: Fragment) {
@@ -118,6 +126,10 @@ class MainActivity : AppCompatActivity() {
 
                     if (userApplication.userType == TypeClient.SERVER.value) {
                         navigationView.menu.findItem(R.id.action_coupon).isVisible = false
+                    }
+
+                    if (userApplication.userType == TypeClient.ADMIN.value) {
+                        navigationView.menu.findItem(R.id.action_coupon).isVisible = true
                     }
 
                     writeOnSharedPreferences(userApplication)
