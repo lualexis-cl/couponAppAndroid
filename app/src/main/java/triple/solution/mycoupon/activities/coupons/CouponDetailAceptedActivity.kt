@@ -37,6 +37,7 @@ class CouponDetailAceptedActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_coupon_detail_acepted)
         supportActionBar?.hide()
+        condition_textView_couponDetailAccepted.movementMethod = ScrollingMovementMethod()
 
         status_linearLayout.visibility = View.GONE
         dateStatus_linearLayout.visibility = View.GONE
@@ -66,16 +67,6 @@ class CouponDetailAceptedActivity : AppCompatActivity() {
         val database = FirebaseDatabase.getInstance()
             .getReference("/clientCoupon/$uid/$keyCoupon")
 
-        /*database.addValueEventListener(object: ValueEventListener{
-            override fun onCancelled(p0: DatabaseError) {
-            }
-
-            override fun onDataChange(p0: DataSnapshot) {
-                TODO("Not yet implemented")
-            }
-
-        })*/
-
         database.addValueEventListener(object: ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
@@ -86,7 +77,6 @@ class CouponDetailAceptedActivity : AppCompatActivity() {
                 nameCoupon_textView_couponDetailAccepted.text = clientCoupon.nameCoupon
                 expire_textView_couponDetailAccepted.text = clientCoupon.expiration
                 condition_textView_couponDetailAccepted.text = clientCoupon.text
-                condition_textView_couponDetailAccepted.movementMethod = ScrollingMovementMethod()
 
                 if (clientCoupon.status == StatusClientCoupon.APPROVED.value) {
                     status_linearLayout.visibility = View.VISIBLE

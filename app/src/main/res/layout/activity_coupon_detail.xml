@@ -20,9 +20,8 @@
     <TextView
         android:id="@+id/nameStore_textView_couponDetail"
         android:layout_width="0dp"
-        android:layout_height="50dp"
+        android:layout_height="49dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:text="Detalle del cupón"
         android:textColor="@color/colorLetterBlack"
@@ -30,12 +29,12 @@
         android:textStyle="bold|italic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/logo_imageView_couponDetail"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/logo_imageView_couponDetail" />
 
     <ImageView
         android:id="@+id/coupon_imageView_couponDetail"
         android:layout_width="0dp"
-        android:layout_height="110dp"
+        android:layout_height="200dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
@@ -54,6 +53,7 @@
         android:layout_marginEnd="8dp"
         android:text="TextView"
         android:textColor="@color/colorLetterBlack"
+        android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -67,6 +67,7 @@
         android:layout_marginTop="8dp"
         android:text="@string/couponAvailable"
         android:textColor="@color/colorLetterBlack"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nameCoupon_textView_couponDetail" />
 
@@ -79,6 +80,7 @@
         android:layout_marginEnd="8dp"
         android:text="TextView"
         android:textColor="@color/colorLetterBlack"
+        android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView6"
@@ -92,6 +94,7 @@
         android:layout_marginTop="8dp"
         android:text="@string/expire"
         android:textColor="@color/colorLetterBlack"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
@@ -104,6 +107,7 @@
         android:layout_marginEnd="8dp"
         android:text="TextView"
         android:textColor="@color/colorLetterBlack"
+        android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView8"
@@ -116,10 +120,11 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:scrollbars="vertical"
         android:maxLines="6"
+        android:scrollbars="vertical"
         android:text="Hola mundo"
         android:textColor="@color/colorLetterBlack"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"

@@ -18,7 +18,8 @@ class CouponListRow(val coupon: Coupon, val key: String) : Item<GroupieViewHolde
     }
 
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
-        Picasso.get().load(coupon.urlImage)
+        Picasso.get()
+            .load(coupon.urlImage)
             .fit()
             .into(viewHolder.itemView.couponList_imageView)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -30,7 +31,7 @@ class CouponListRow(val coupon: Coupon, val key: String) : Item<GroupieViewHolde
         viewHolder.itemView.detailCoupon_textView_couponRow.text =
             "Cupones disponibles: ${coupon.couponAvailable} de ${coupon.totalCoupon}"
 
-        if (coupon.couponAvailable <= 0){
+        if (coupon.couponAvailable <= 0) {
             viewHolder.itemView.detailCoupon_textView_couponRow.setTextColor(Color.RED)
             viewHolder.itemView.detailCoupon_textView_couponRow.text = "No hay cupones disponibles"
         }

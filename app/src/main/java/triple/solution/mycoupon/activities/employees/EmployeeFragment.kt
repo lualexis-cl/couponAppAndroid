@@ -16,12 +16,21 @@ import com.budiyev.android.codescanner.CodeScanner
 import com.budiyev.android.codescanner.DecodeCallback
 import com.budiyev.android.codescanner.ErrorCallback
 import com.budiyev.android.codescanner.ScanMode
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.fragment_employee.view.*
 
 import triple.solution.mycoupon.R
 import triple.solution.mycoupon.activities.register.EditPerfilFragment
 import triple.solution.mycoupon.activities.register.LoginFragment
+import triple.solution.mycoupon.enums.StatusClientCoupon
 import triple.solution.mycoupon.helpers.runOnUiThread
+import triple.solution.mycoupon.helpers.stringToDate
+import triple.solution.mycoupon.helpers.toNow
+import triple.solution.mycoupon.models.ClientCoupon
+import java.util.*
 
 /**
  * A simple [Fragment] subclass.
@@ -90,12 +99,7 @@ class EmployeeFragment : Fragment() {
                 Log.d("CodeQR", "Scan Result ${it.text}")
 
                 if (it.text.contains("__")) {
-                    val bundle = Bundle()
-                    bundle.putString("keyQrCode", it.text)
-                    val fragment = CouponApprovedFragment()
-                    fragment.arguments = bundle
-
-                    loadFragment(fragment)
+                    validationUsedCoupon(it.text)
                 } else {
                     loadFragment(CouponDeclinedFragment())
                 }
@@ -108,6 +112,39 @@ class EmployeeFragment : Fragment() {
                 Log.d("CodeQR", "Error Scan Result ${it.message}")
             }
         }
+    }
+
+    private fun validationUsedCoupon(code: String) {
+        val codes = code.split("__")
+        val keyClient = codes[0]
+        val keyCoupon = codes[1]
+
+        val database = FirebaseDatabase.getInstance()
+            .getReference("/clientCoupon/$keyClient/$keyCoupon")
+
+        database.addListenerForSingleValueEvent(object: ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+            }
+
+            override fun onDataChange(data: DataSnapshot) {
+                val coupon = data.getValue(ClientCoupon::class.java) ?: return
+
+                if (coupon.expiration.stringToDate() < Date().toNow()) {
+                    loadFragment(CouponDeclinedFragment())
+                } else if (coupon.status == StatusClientCoupon.DELETED.value ||
+                    coupon.status == StatusClientCoupon.APPROVED.value) {
+                    loadFragment(CouponDeclinedFragment())
+                } else {
+                    val bundle = Bundle()
+                    bundle.putString("keyQrCode", code)
+                    val fragment = CouponApprovedFragment()
+                    fragment.arguments = bundle
+
+                    loadFragment(fragment)
+                }
+            }
+
+        })
     }
 
     private fun loadFragment(fragment: Fragment) {

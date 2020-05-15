@@ -1,6 +1,7 @@
 package triple.solution.mycoupon.activities.register
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_register.view.*
@@ -24,7 +26,7 @@ import triple.solution.mycoupon.viewhelpers.LoadingDialog
  */
 class RegisterFragment : Fragment() {
 
-    private var loadingDialog: LoadingDialog? = null
+    private lateinit var loadingDialog: LoadingDialog
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -95,26 +97,52 @@ class RegisterFragment : Fragment() {
             }
 
             val password = view.password_editText_register.text
-            this.loadingDialog?.startLoadingDialog()
+            this.loadingDialog.startLoadingDialog()
 
             FirebaseAuth.getInstance()
                 .createUserWithEmailAndPassword(user.email, password.toString())
                 .addOnCompleteListener {
 
                     if (!it.isSuccessful) {
-                        this.loadingDialog?.dismissDialog()
+                        this.loadingDialog.dismissDialog()
                         return@addOnCompleteListener
                     }
 
-                    saveUser(user)
+                    val firebaseAuth = FirebaseAuth.getInstance()
+                    val userEdit = UserProfileChangeRequest.Builder()
+                        .setDisplayName("${user.name} ${user.lastName}")
+                        .build()
+
+                    firebaseAuth
+                        .currentUser
+                        ?.updateProfile(userEdit)
+                        ?.addOnCompleteListener { editProfile ->
+                            if (editProfile.isSuccessful) {
+                                sendEmailVerification(firebaseAuth, user)
+                            }
+                        }
+
 
                 }.addOnFailureListener {
-                    this.loadingDialog?.dismissDialog()
+                    this.loadingDialog.dismissDialog()
                     Toast.makeText(context,
                         " Se produjo un error al crear el usuario ${it.message}",
                         Toast.LENGTH_LONG).show()
                 }
         }
+    }
+
+    private fun sendEmailVerification(firebaseAuth: FirebaseAuth, user: User) {
+        firebaseAuth
+            .currentUser
+            ?.sendEmailVerification()
+            ?.addOnCompleteListener { userVerification ->
+                if (userVerification.isSuccessful) {
+                    saveUser(user)
+                } else {
+                    //TODO: message error not valid email, etc
+                }
+            }
     }
 
     private fun saveUser(user: User) {
@@ -127,17 +155,27 @@ class RegisterFragment : Fragment() {
 
         database.setValue(user)
             .addOnSuccessListener {
-                this.loadingDialog?.dismissDialog()
-                redirectHome()
+                this.loadingDialog.dismissDialog()
+                FirebaseAuth.getInstance().signOut()
+                redirectLogin()
+                //redirectHome()
             }.addOnFailureListener {
-                this.loadingDialog?.dismissDialog()
+                this.loadingDialog.dismissDialog()
             }
 
     }
 
-    private fun redirectHome() {
-        val mainActivity = activity as MainActivity
-        mainActivity.visibilityMenu()
-        activity?.navigationView?.selectedItemId = R.id.action_home
+    private fun redirectLogin() {
+        val transaction =
+            activity?.supportFragmentManager?.beginTransaction()
+        val bundle = Bundle()
+        bundle.putString("RequiredMessage", "Message")
+
+        val fragment = LoginFragment()
+        fragment.arguments = bundle
+        transaction?.replace(R.id.container, fragment)
+
+        transaction?.addToBackStack(null)
+        transaction?.commit()
     }
 }

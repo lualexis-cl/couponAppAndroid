@@ -47,15 +47,20 @@ class CouponDetailActivity : AppCompatActivity() {
 
     private fun loadDataStore(){
         nameStore_textView_couponDetail.text = "Detalle del Cupón"
-        Picasso.get().load(store.urlLogo)
+        Picasso
+            .get()
+            .load(store.urlLogo)
             .fit()
             .into(logo_imageView_couponDetail)
     }
 
     private fun loadDataCoupon() {
-        Picasso.get().load(coupon.urlImage)
+        Picasso
+            .get()
+            .load(coupon.urlImage)
             .fit()
             .into(coupon_imageView_couponDetail)
+
         nameCoupon_textView_couponDetail.text = coupon.nameCoupon
         numberCoupons_textView_couponDetail.text = coupon.couponAvailable.toString()
         expire_textView_couponDetail.text = coupon.expiration
