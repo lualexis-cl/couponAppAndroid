@@ -44,7 +44,7 @@ class LoginFragment : Fragment() {
         if (message != null) {
             val dialog = MessageDialog(this.activity!!)
             arguments?.remove("RequiredMessage")
-            dialog.showDialog("", "Por favor verifique su dirección de email para confirmar su registro y disfrutar de los beneficios", SweetAlertDialog.SUCCESS_TYPE)
+            dialog.showDialog("", message, SweetAlertDialog.SUCCESS_TYPE)
         }
     }
 
@@ -115,7 +115,8 @@ class LoginFragment : Fragment() {
                         Toast.LENGTH_LONG)
                         .show()
                 }
-        }
+        }//
+
     }
 
     private fun redirectHome() {

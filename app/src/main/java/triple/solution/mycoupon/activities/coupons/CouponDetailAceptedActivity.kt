@@ -3,10 +3,10 @@ package triple.solution.mycoupon.activities.coupons
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -27,17 +27,16 @@ import java.util.*
 
 class CouponDetailAceptedActivity : AppCompatActivity() {
 
-    private var store: Store = Store()
-    private var keyCoupon = String()
+    private lateinit var store: Store
+    private lateinit var keyCoupon: String
     private var clientCoupon = ClientCoupon()
-    private var loadingDialog: LoadingDialog? = null
-    private var messageDialog: MessageDialog? = null
+    private lateinit var loadingDialog: LoadingDialog
+    private lateinit var messageDialog: MessageDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_coupon_detail_acepted)
         supportActionBar?.hide()
-        condition_textView_couponDetailAccepted.movementMethod = ScrollingMovementMethod()
 
         status_linearLayout.visibility = View.GONE
         dateStatus_linearLayout.visibility = View.GONE
@@ -45,13 +44,30 @@ class CouponDetailAceptedActivity : AppCompatActivity() {
         this.loadingDialog = LoadingDialog(this)
         this.messageDialog = MessageDialog(this)
 
-        store = intent.getParcelableExtra("storeAccepted")
-        keyCoupon = intent.getStringExtra("keyCouponAccepted")
+        this.store = intent.getParcelableExtra("storeAccepted")
+        this.keyCoupon = intent.getStringExtra("keyCouponAccepted")
 
+        configScrollView()
         loadDataStore()
         loadDataCoupon()
         generateQr()
         cancelCoupon()
+    }
+
+    private fun configScrollView() {
+        condition_textView_couponDetailAccepted.movementMethod = ScrollingMovementMethod()
+
+        scrollViewCouponAccepted.setOnTouchListener { _, _ ->
+            condition_textView_couponDetailAccepted.parent
+                .requestDisallowInterceptTouchEvent(false)
+            false
+        }
+
+        condition_textView_couponDetailAccepted.setOnTouchListener { _, _ ->
+            condition_textView_couponDetailAccepted.parent
+                .requestDisallowInterceptTouchEvent(true)
+            false
+        }
     }
 
     private fun loadDataStore() {
@@ -141,7 +157,7 @@ class CouponDetailAceptedActivity : AppCompatActivity() {
             }
             .setConfirmClickListener {
                 it.dismissWithAnimation()
-                this.loadingDialog?.startLoadingDialog()
+                this.loadingDialog.startLoadingDialog()
                 updateClientCoupon()
             }
             confirmMessage.showCancelButton(true)
@@ -160,9 +176,11 @@ class CouponDetailAceptedActivity : AppCompatActivity() {
             .addOnCompleteListener {
                 verifyCoupon()
                 cancelCoupon_button.visibility = View.INVISIBLE
+                qrCode_imageView.visibility = View.INVISIBLE
+
             }.addOnFailureListener {
-                this.loadingDialog?.dismissDialog()
-                messageDialog?.showDialog("",
+                this.loadingDialog.dismissDialog()
+                messageDialog.showDialog("",
                     "Se produjo un error inesperado, favor intentar más tarde",
                     SweetAlertDialog.ERROR_TYPE)
             }
@@ -185,7 +203,7 @@ class CouponDetailAceptedActivity : AppCompatActivity() {
 
                     updateCoupon(database, coupon)
                 } else {
-                    loadingDialog?.dismissDialog()
+                    loadingDialog.dismissDialog()
                 }
 
             }
@@ -196,12 +214,12 @@ class CouponDetailAceptedActivity : AppCompatActivity() {
     private fun updateCoupon(database: DatabaseReference, coupon: Coupon) {
         database.setValue(coupon)
             .addOnCompleteListener {
-                loadingDialog?.dismissDialog()
+                loadingDialog.dismissDialog()
             }.addOnFailureListener {
-                messageDialog?.showDialog("",
+                messageDialog.showDialog("",
                     "Se produjo un error inesperado, favor intentar más tarde",
                     SweetAlertDialog.ERROR_TYPE)
-                this.loadingDialog?.dismissDialog()
+                this.loadingDialog.dismissDialog()
             }
     }
 }

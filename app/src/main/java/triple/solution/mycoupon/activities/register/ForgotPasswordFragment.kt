@@ -10,6 +10,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_forgot_password.view.*
 import triple.solution.mycoupon.R
+import triple.solution.mycoupon.viewhelpers.LoadingDialog
 import triple.solution.mycoupon.viewhelpers.MessageDialog
 
 /**
@@ -17,7 +18,8 @@ import triple.solution.mycoupon.viewhelpers.MessageDialog
  */
 class ForgotPasswordFragment : Fragment() {
 
-    private lateinit var currentView: View;
+    private lateinit var currentView: View
+    private lateinit var loading: LoadingDialog
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -25,31 +27,35 @@ class ForgotPasswordFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         this.currentView = inflater.inflate(R.layout.fragment_forgot_password, container, false)
-
-        backToLogin(null)
+        this.loading = LoadingDialog(activity!!)
+        backToLogin()
         sendEmailForgotPassword()
 
         return this.currentView
     }
 
-    private fun backToLogin(message: String?) {
+    private fun backToLogin() {
         this.currentView.back_button_forgotPassword.setOnClickListener {
-            val transaction =
-                activity?.supportFragmentManager?.beginTransaction()
-
-            val fragment = LoginFragment()
-
-            if (message != null) {
-                val bundle = Bundle()
-                bundle.putString("RequiredMessage", message)
-                fragment.arguments = bundle
-            }
-
-            transaction?.replace(R.id.container, fragment)
-
-            transaction?.addToBackStack(null)
-            transaction?.commit()
+            backToLoginAction(null)
         }
+    }
+
+    private fun backToLoginAction(message: String?) {
+        val transaction =
+            activity?.supportFragmentManager?.beginTransaction()
+
+        val fragment = LoginFragment()
+
+        if (message != null) {
+            val bundle = Bundle()
+            bundle.putString("RequiredMessage", message)
+            fragment.arguments = bundle
+        }
+
+        transaction?.replace(R.id.container, fragment)
+
+        transaction?.addToBackStack(null)
+        transaction?.commit()
     }
 
     private fun sendEmailForgotPassword() {
@@ -61,14 +67,17 @@ class ForgotPasswordFragment : Fragment() {
 
                 return@setOnClickListener
             }
+            this.loading.startLoadingDialog()
 
             FirebaseAuth.getInstance()
                 .sendPasswordResetEmail(this.currentView.email_editText_forgotPassword.text.toString())
                 .addOnCompleteListener {
+                    this.loading.dismissDialog()
                     if (it.isSuccessful) {
-                        backToLogin("Se le ha enviado un email con las instrucciones")
+                        backToLoginAction("Se le ha enviado un email con las instrucciones")
                     }
                 }.addOnFailureListener {
+                    this.loading.dismissDialog()
                     val message = MessageDialog(activity!!)
                     message.showDialog("", "Se produjo un error ${it.message}", SweetAlertDialog.ERROR_TYPE)
                 }

@@ -119,14 +119,20 @@ class EmployeeFragment : Fragment() {
         val keyClient = codes[0]
         val keyCoupon = codes[1]
 
-        val database = FirebaseDatabase.getInstance()
+        val database = FirebaseDatabase
+            .getInstance()
             .getReference("/clientCoupon/$keyClient/$keyCoupon")
 
         database.addListenerForSingleValueEvent(object: ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
+
             }
 
             override fun onDataChange(data: DataSnapshot) {
+                if (!data.exists()) {
+                    loadFragment(CouponDeclinedFragment())
+                }
+
                 val coupon = data.getValue(ClientCoupon::class.java) ?: return
 
                 if (coupon.expiration.stringToDate() < Date().toNow()) {

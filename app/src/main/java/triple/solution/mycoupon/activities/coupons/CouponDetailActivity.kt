@@ -33,16 +33,35 @@ class CouponDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_coupon_detail)
         supportActionBar?.hide()
-        condition_textView_couponDetail.movementMethod = ScrollingMovementMethod()
+
         loadingDialog = LoadingDialog(this)
 
         coupon = intent.getParcelableExtra("coupon")
         store = intent.getParcelableExtra("store")
         keyCoupon = intent.getStringExtra("keyCoupon")
 
+        configScrollView()
         loadDataStore()
         loadDataCoupon()
         acceptedCoupon()
+    }
+
+    private fun configScrollView() {
+        condition_textView_couponDetail.movementMethod = ScrollingMovementMethod()
+
+        scrollViewCouponDetail.setOnTouchListener { _, _ ->
+            condition_textView_couponDetail
+                .parent
+                .requestDisallowInterceptTouchEvent(false)
+            false
+        }
+
+        condition_textView_couponDetail.setOnTouchListener { _, _ ->
+            condition_textView_couponDetail
+                .parent
+                .requestDisallowInterceptTouchEvent(true)
+            false
+        }
     }
 
     private fun loadDataStore(){

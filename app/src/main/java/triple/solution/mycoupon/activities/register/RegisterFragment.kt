@@ -169,7 +169,7 @@ class RegisterFragment : Fragment() {
         val transaction =
             activity?.supportFragmentManager?.beginTransaction()
         val bundle = Bundle()
-        bundle.putString("RequiredMessage", "Message")
+        bundle.putString("RequiredMessage", "Por favor verifique su dirección de email para confirmar su registro y disfrutar de los beneficios")
 
         val fragment = LoginFragment()
         fragment.arguments = bundle
